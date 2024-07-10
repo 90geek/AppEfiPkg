@@ -22,6 +22,7 @@
 #include <Protocol/ShellParameters.h>
 #include <Protocol/Shell.h>
 #include <Guid/FileInfo.h>
+#include "LsEfi.h"
 
 UINTN  Argc;
 CHAR16 **Argv;

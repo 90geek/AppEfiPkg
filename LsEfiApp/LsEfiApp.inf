@@ -34,7 +34,16 @@
   LsEfiApp.c
   LsEfiDump.c
   LsEfiSupport.c
-  Debug.c
+  LsEfi.h
+#Debug.c
+  Spi.c
+  LsSe.c
+  EdkiiShellTool/EdkiiShellToolPkg/UsbInfo/UsbInfo.c
+  EdkiiShellTool/EdkiiShellToolPkg/PcdDump/PcdDump.c
+  EdkiiShellTool/EdkiiShellToolPkg/HobList/HobList.c
+  EdkiiShellTool/EdkiiShellToolPkg/EsrtFmpDump/EsrtFmpDump.c
+  EdkiiShellTool/EdkiiShellToolPkg/MemoryAttributesDump/MemoryAttributesDump.c
+  EdkiiShellTool/EdkiiShellToolPkg/MemoryTypeInfo/MemoryTypeInfo.c
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -42,7 +51,19 @@
   LsRefCodePkg/Loongson.dec
   LsIpmiPkg/LsIpmiPkg.dec
 #  LsRefCodePkg/SampleCode/Ls3c5000ldualCrbEX/LoongsonCrbEx.dec
+  LsEfiPkg/LsEfiPkg.dec
 
+[LibraryClasses]
+  BaseLib
+  UefiApplicationEntryPoint
+  DebugLib
+#DynDebugLib
+  MemoryAllocationLib
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+  UefiLib
+  PrintLib
+  HobLib
 
 [Guids]
   gEfiGlobalVariableGuid                 ## CONSUMES   ## GUID
@@ -54,22 +75,49 @@
   gEfiSystemResourceTableGuid            ## CONSUMES   ## GUID
   gEfiDebugSwitchGuid
 
+  # HobList
+  gEfiHobListGuid
+  gEfiHobMemoryAllocStackGuid
+  gEfiHobMemoryAllocBspStoreGuid
+  gEfiHobMemoryAllocModuleGuid
+
+  # pcddump
+  gEfiFileInfoGuid
+  gPcdDataBaseHobGuid
+  gPcdDataBaseSignatureGuid
+  gEfiVariableGuid
+  gEfiAuthenticatedVariableGuid
+
+  # MemoryAttributesDump
+  gEfiMemoryAttributesTableGuid
+
+  # MemoryTypeInfo
+  gEfiMemoryTypeInformationGuid
+
 [Protocols]
   gEfiGraphicsOutputProtocolGuid         ## CONSUMES
   gEfiFirmwareManagementProtocolGuid     ## CONSUMES
   gEfiShellParametersProtocolGuid        ## CONSUMES
   gEfiShellProtocolGuid                  ## CONSUMES
 
-[LibraryClasses]
-  BaseLib
-  UefiApplicationEntryPoint
-  DebugLib
-  DynDebugLib
-  MemoryAllocationLib
-  UefiBootServicesTableLib
-  UefiRuntimeServicesTableLib
-  UefiLib
-  PrintLib
+  ## UsbInfo
+  gEfiUsbIoProtocolGuid
+  gEfiUsb2HcProtocolGuid
+  gEfiPciIoProtocolGuid
+
+  # pcddump
+  gEfiLoadedImageProtocolGuid
+  gEfiSimpleFileSystemProtocolGuid
+  gEfiFirmwareVolume2ProtocolGuid
+  gGetPcdInfoProtocolGuid
+  gEfiPcdProtocolGuid
+  gEfiGetPcdInfoProtocolGuid
+  gPcdProtocolGuid
+  # Esrt
+  gEsrtManagementProtocolGuid
+
+[Pcd]
+  gEfiMdeModulePkgTokenSpaceGuid.PcdVpdBaseAddress  ## SOMETIMES_CONSUMES
 
 [UserExtensions.TianoCore."ExtraFiles"]
   CommandAppExtra.uni

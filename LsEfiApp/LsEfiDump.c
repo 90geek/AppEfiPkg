@@ -27,23 +27,7 @@
 #include <Guid/SystemResourceTable.h>
 #include <Guid/FmpCapsule.h>
 #include <IndustryStandard/WindowsUxCapsule.h>
-
-/**
-  Read a file.
-
-  @param[in]  FileName        The file to be read.
-  @param[out] BufferSize      The file buffer size
-  @param[out] Buffer          The file buffer
-
-  @retval EFI_SUCCESS    Read file successfully
-  @retval EFI_NOT_FOUND  File not found
-**/
-EFI_STATUS
-ReadFileToBuffer (
-  IN  CHAR16                               *FileName,
-  OUT UINTN                                *BufferSize,
-  OUT VOID                                 **Buffer
-  );
+#include "LsEfi.h"
 
 /**
   Write a file.

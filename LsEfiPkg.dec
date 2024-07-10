@@ -26,6 +26,9 @@
   PACKAGE_GUID                   = AA3865E8-7F30-4f59-8696-99F56010185B
   PACKAGE_VERSION                = 0.1
 
+[Includes]
+  LsEfiApp
+
 [PcdsFeatureFlag]
   gNetSwiftUndiPkgTokenSpaceGuid.PcdSupportScsiPassThru|TRUE|BOOLEAN|0x00010001
   gNetSwiftUndiPkgTokenSpaceGuid.PcdSupportExtScsiPassThru|TRUE|BOOLEAN|0x00010002

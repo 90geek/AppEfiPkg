@@ -22,6 +22,7 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVI
 #include <Library/DebugLib.h>
 #include <Library/DynDebugLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
+#include "LsEfi.h"
 #define DEBUG_ADDR              ((CACHED_MEMORY_ADDR) | 0x80)
 extern UINT8 ModuleNum ;
 extern DP_INFO DebugData[];
@@ -46,11 +47,31 @@ DebugPrintUsage (
   VOID
   )
 {
-  Print(L"LsEfiApp:  usage\n");
-  Print(L"  LsEfiApp <Command...> [-NR]\n");
-  Print(L"  LsEfiApp -S <Command>\n");
-  Print(L"  -S: Setup Variable Data Command\n");
-  Print(L"Parameter:\n");
+  Print(L".TH Turn on/off the log of DynDebug function.\r\n");
+  Print(L".SH NAME\r\n");
+  Print(L" \r\n");
+  Print(L".SH SYNOPSIS\r\n");
+  Print(L" \r\n");
+  Print(L"LsEifApp.efi debug -on/off module index\n");
+  Print(L".SH OPTIONS\r\n");
+  Print(L" \r\n");
+  Print(L"  -on             - turn on DynDebug log.\r\n");
+  Print(L"  -off            - turn off DynDebug log.\r\n");
+  Print(L".SH DESCRIPTION\r\n");
+  Print(L" \r\n");
+  Print(L"NOTES:\r\n");
+  Print(L"  \r\n");
+  Print(L".SH EXAMPLES\r\n");
+  Print(L" \r\n");
+  Print(L"  * turn on module 0 DynDebug. \r\n");
+  Print(L"    shell> LsEifApp.efi debug -on 0.\r\n");
+  Print(L" \r\n");
+  Print(L"  * turn off module 1 DynDebug. \r\n");
+  Print(L"    shell> LsEifApp.efi debug -on 1.\r\n");
+  Print(L" \r\n");
+  Print(L" \r\n");
+  Print(L"    shell>LsEifApp.efi debug -help  \r\n");
+  Print(L" \r\n");
 }
 
 UINT8 GetId(UINT8 Index)
@@ -81,10 +102,10 @@ CommandRunDebug (
 
   DEBUG((DEBUG_INFO,"Argc:%d,Arcv %s\n",Argc, Argv[1] ));
   if (Argc < 2) {
-    // PrintUsage();
+    DebugPrintUsage ();
     return EFI_INVALID_PARAMETER;
   }
-  if (StrCmp(Argv[1], L"on") == 0) {
+  if (StrCmp(Argv[1], L"-on") == 0) {
     Index = StrHexToUintn((CHAR16*)Argv[2]);
     DEBUG((DEBUG_INFO,"Index:%d\n",Index));
 
@@ -141,7 +162,7 @@ CommandRunDebug (
       Print(L"debug on Success [%llx]\n",Data);
       ASSERT_EFI_ERROR(Status);
 
-    } else if (StrCmp(Argv[1], L"off") == 0) {
+    } else if (StrCmp(Argv[1], L"-off") == 0) {
       Index = StrHexToUintn((CHAR16*)Argv[2]);
       DEBUG((DEBUG_INFO,"Index:%d\n",Index));
 
@@ -197,7 +218,7 @@ CommandRunDebug (
       ASSERT_EFI_ERROR(Status);
       Print(L"debug off Success [%llx]\n",Data);
 
-    } else if (StrCmp(Argv[1], L"help") == 0) {
+    } else if (StrCmp(Argv[1], L"-help") == 0) {
       Print(L"**********************************************************************\n");
       Print(L"  ModuleId:\n");
       Print(L"\n");

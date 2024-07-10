@@ -12,38 +12,15 @@
 #include <Guid/CapsuleReport.h>
 #include <Guid/SystemResourceTable.h>
 #include <Guid/FmpCapsule.h>
+#include "LsEfi.h"
 // #include <IndustryStandard/WindowsUxCapsule.h>
 // #include <SetupVarData.h>
 // #include <NVDataStruc/IpmiSetupDataDef.h>
 // #include <NVDataStruc/DevManageSetupDataDef.h>
 
-
 extern UINTN  Argc;
 extern CHAR16 **Argv;
-// extern EFI_STATUS
-// EFIAPI
-//  TestUpdateSetupVariable(
-//   VOID);
-EFI_STATUS
-EFIAPI
-CommandRunDebug (
-    UINTN  Argc,
-    CHAR16 **Argv
-  );
-//
-// Define
-//
 
-/**
-
-  This function parse application ARG.
-
-  @return Status
-**/
-EFI_STATUS
-GetArg (
-  VOID
-  );
 /**
 
   This function print buffer.
@@ -66,7 +43,7 @@ VOID PrintData(unsigned char *buf,int size,int level)
 /**
   Print APP usage.
 **/
-VOID
+STATIC VOID
 PrintUsage (
   VOID
   )
@@ -116,12 +93,56 @@ UefiMain (
     return Status;
   }
 
-  if (StrCmp(Argv[1], L"-debug") == 0) {
+  if (StrCmp(Argv[1], L"debug") == 0) {
     // Argv_c--;
     // Argv_p++;
-    CommandRunDebug (Argv_c, Argv+Argv_p);
+    // CommandRunDebug (Argv_c, Argv+Argv_p);
     return Status;
   }
+
+  if (StrCmp(Argv[1], L"spi") == 0) {
+    CommandRunSpi (Argv_c, Argv+Argv_p);
+    return Status;
+  }
+
+  if (StrCmp(Argv[1], L"debug") == 0) {
+    // Argv_c--;
+    // Argv_p++;
+    // CommandRunDebug (Argv_c, Argv+Argv_p);
+    return Status;
+  }
+
+#ifdef EDKII_SHELL_TOOL
+  if (StrCmp(Argv[1], L"usbinfo") == 0) {
+    UsbInfoEntryPoint (ImageHandle, SystemTable);
+    return Status;
+  }
+
+  if (StrCmp(Argv[1], L"hoblist") == 0) {
+    InitializeHobList (ImageHandle, SystemTable);
+    return Status;
+  }
+  if (StrCmp(Argv[1], L"pcddump") == 0) {
+    PcdDumpEntrypoint (Argv_c, Argv+Argv_p);
+    return Status;
+  }
+
+  if (StrCmp(Argv[1], L"esrt") == 0) {
+    EsrtFmpDumpEntrypoint (ImageHandle, SystemTable);
+    return Status;
+  }
+
+  if (StrCmp(Argv[1], L"memattr") == 0) {
+    MemoryAttributesDumpEntrypoint (ImageHandle, SystemTable);
+    return Status;
+  }
+
+  if (StrCmp(Argv[1], L"meminfo") == 0) {
+    MemoryTypeInfoEntrypoint (ImageHandle, SystemTable);
+    return Status;
+  }
+
+#endif
 
   if (StrCmp(Argv[1], L"-S") == 0) {
 

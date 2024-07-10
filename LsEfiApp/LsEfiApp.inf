@@ -64,6 +64,8 @@
   UefiLib
   PrintLib
   HobLib
+  IoLib
+  TimerLib
 
 [Guids]
   gEfiGlobalVariableGuid                 ## CONSUMES   ## GUID

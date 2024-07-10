@@ -111,6 +111,10 @@ UefiMain (
     // CommandRunDebug (Argv_c, Argv+Argv_p);
     return Status;
   }
+  if (StrCmp(Argv[1], L"se") == 0) {
+    CommandRunLsSe (Argv_c, Argv+Argv_p);
+    return Status;
+  }
 
 #ifdef EDKII_SHELL_TOOL
   if (StrCmp(Argv[1], L"usbinfo") == 0) {

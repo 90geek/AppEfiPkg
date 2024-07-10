@@ -69,6 +69,11 @@ CommandRunSpi (
     CHAR16 **Argv
   );
 
+EFI_STATUS
+CommandRunLsSe (
+  UINTN  Argc,
+  CHAR16 **Argv
+  );
 #ifdef EDKII_SHELL_TOOL
 // EdkiiShellTool
 EFI_STATUS

@@ -28,7 +28,7 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVI
 #ifndef __LS_EFI_H__
 #define __LS_EFI_H__
 
-#define EDKII_SHELL_TOOL
+//#define EDKII_SHELL_TOOL
 /**
   This function parse application ARG.
 

@@ -38,12 +38,12 @@
 #Debug.c
   Spi.c
   LsSe.c
-  EdkiiShellTool/EdkiiShellToolPkg/UsbInfo/UsbInfo.c
-  EdkiiShellTool/EdkiiShellToolPkg/PcdDump/PcdDump.c
-  EdkiiShellTool/EdkiiShellToolPkg/HobList/HobList.c
-  EdkiiShellTool/EdkiiShellToolPkg/EsrtFmpDump/EsrtFmpDump.c
-  EdkiiShellTool/EdkiiShellToolPkg/MemoryAttributesDump/MemoryAttributesDump.c
-  EdkiiShellTool/EdkiiShellToolPkg/MemoryTypeInfo/MemoryTypeInfo.c
+#  EdkiiShellTool/EdkiiShellToolPkg/UsbInfo/UsbInfo.c
+#  EdkiiShellTool/EdkiiShellToolPkg/PcdDump/PcdDump.c
+#  EdkiiShellTool/EdkiiShellToolPkg/HobList/HobList.c
+#  EdkiiShellTool/EdkiiShellToolPkg/EsrtFmpDump/EsrtFmpDump.c
+#  EdkiiShellTool/EdkiiShellToolPkg/MemoryAttributesDump/MemoryAttributesDump.c
+#  EdkiiShellTool/EdkiiShellToolPkg/MemoryTypeInfo/MemoryTypeInfo.c
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -52,6 +52,7 @@
   LsIpmiPkg/LsIpmiPkg.dec
 #  LsRefCodePkg/SampleCode/Ls3c5000ldualCrbEX/LoongsonCrbEx.dec
   LsEfiPkg/LsEfiPkg.dec
+  SecurityPkg/SecurityPkg.dec
 
 [LibraryClasses]
   BaseLib
@@ -66,6 +67,9 @@
   HobLib
   IoLib
   TimerLib
+  LsSeLib
+  PcdLib
+  Tpm2CommandLib
 
 [Guids]
   gEfiGlobalVariableGuid                 ## CONSUMES   ## GUID
@@ -120,6 +124,7 @@
 
 [Pcd]
   gEfiMdeModulePkgTokenSpaceGuid.PcdVpdBaseAddress  ## SOMETIMES_CONSUMES
+  gLoongsonTokenSpaceGuid.PcdLsSeBaseAddress
 
 [UserExtensions.TianoCore."ExtraFiles"]
   CommandAppExtra.uni

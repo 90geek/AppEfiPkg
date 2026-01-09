@@ -1,0 +1,64 @@
+##  @file
+#  A shell application that triggers reset count app.
+#
+# This application can trigger capsule update process. It can also
+# generate capsule image, or dump capsule variable information.
+#
+#  Copyright (c) 2016 - 2017, Intel Corporation. All rights reserved.<BR>
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010006
+  BASE_NAME                      = ResetCountApp
+  MODULE_UNI_FILE                = ResetCountApp.uni
+  FILE_GUID                      = ab6cf98e-2ea5-413f-ed4e-49428b7c865e
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = UefiMain
+
+#
+# The following information is for reference only and not required by the build tools.
+#
+#  VALID_ARCHITECTURES           = IA32 X64 LOONGARCH64
+#
+
+[Sources]
+  ResetCountApp.c
+  ResetCountSupport.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  AppEfiPkg/AppEfiPkg.dec 
+  ShellPkg/ShellPkg.dec
+#LsRefCodePkg/Loongson.dec
+
+[Guids]
+  gEfiGlobalVariableGuid                 ## CONSUMES   ## GUID
+  gEfiSystemResourceTableGuid            ## CONSUMES   ## GUID
+  gResetCountAppGuid
+
+[Protocols]
+  gEfiGraphicsOutputProtocolGuid         ## CONSUMES
+  gEfiFirmwareManagementProtocolGuid     ## CONSUMES
+  gEfiShellParametersProtocolGuid        ## CONSUMES
+  gEfiShellProtocolGuid                  ## CONSUMES
+
+[LibraryClasses]
+  BaseLib
+  UefiApplicationEntryPoint
+  DebugLib
+  MemoryAllocationLib
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+  UefiLib
+  PrintLib
+  ShellLib

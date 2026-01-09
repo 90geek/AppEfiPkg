@@ -1,33 +1,25 @@
-## @file
+##  @file  AppEfiPkg.dec
 #
-#  Copyright (c) 2018 Loongson Technology Corporation Limited (www.loongson.cn).
-#  All intellectual property rights(Copyright, Patent and Trademark) reserved.
+# Copyright (c) 2016, Intel Corporation. All rights reserved.<BR>
+# This program and the accompanying materials are licensed and made available under
+# the terms and conditions of the BSD License that accompanies this distribution.
+# The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php.
 #
-#  Any violations of copyright or other intellectual property rights of the Loongson Technology
-#  Corporation Limited will be held accountable in accordance with the law,
-#  if you (or any of your subsidiaries, corporate affiliates or agents) initiate
-#  directly or indirectly any Intellectual Property Assertion or Intellectual Property Litigation:
-#  (i) against Loongson Technology Corporation Limited or any of its subsidiaries or corporate affiliates,
-#  (ii) against any party if such Intellectual Property Assertion or Intellectual Property Litigation arises
-#  in whole or in part from any software, technology, product or service of Loongson Technology Corporation
-#  Limited or any of its subsidiaries or corporate affiliates, or (iii) against any party relating to the Software.
-#
-#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-#  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR
-#  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION).
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #
 ##
 
-
 [Defines]
   DEC_SPECIFICATION              = 0x00010005
-  PACKAGE_NAME                   = LsEfiPkg
-  PACKAGE_GUID                   = AA3865E8-7F30-4f59-8696-99F56010185B
+  PACKAGE_NAME                   = AppEfiPkg
+  PACKAGE_GUID                   = 47C04C9A-8D44-4971-9722-D9A98EDCEA16
   PACKAGE_VERSION                = 0.1
 
 [Includes]
-  LsEfiApp
+  AppSrc/EdkiiCoreDatabaseDump/Include
+
 
 [PcdsFeatureFlag]
   gNetSwiftUndiPkgTokenSpaceGuid.PcdSupportScsiPassThru|TRUE|BOOLEAN|0x00010001
@@ -41,6 +33,7 @@
 [PcdsPatchableInModule]
   gNetSwiftUndiPkgTokenSpaceGuid.PcdDriverSupportedEfiVersion|0x0002000a|UINT32|0x00010003
 
+
 [Guids]
   gNetSwiftUndiPkgTokenSpaceGuid = { 0x1e43298f, 0x3478, 0x41a7, { 0xb5, 0x77, 0x86, 0x6, 0x46, 0x35, 0xc7, 0x28 } }
-
+  gResetCountAppGuid             = { 0x5d5178f3, 0x966c, 0x4bc5, { 0xae, 0xde, 0xf1, 0x11, 0x6e, 0x0a, 0xeb, 0xaa } }

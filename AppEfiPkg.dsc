@@ -1,105 +1,180 @@
 ## @file
 #
-#  Copyright (c) 2018 Loongson Technology Corporation Limited (www.loongson.cn).
-#  All intellectual property rights(Copyright, Patent and Trademark) reserved.
+#  Copyright (c) 2022, Intel Corporation. All rights reserved.<BR>
 #
-#  Any violations of copyright or other intellectual property rights of the Loongson Technology
-#  Corporation Limited will be held accountable in accordance with the law,
-#  if you (or any of your subsidiaries, corporate affiliates or agents) initiate
-#  directly or indirectly any Intellectual Property Assertion or Intellectual Property Litigation:
-#  (i) against Loongson Technology Corporation Limited or any of its subsidiaries or corporate affiliates,
-#  (ii) against any party if such Intellectual Property Assertion or Intellectual Property Litigation arises
-#  in whole or in part from any software, technology, product or service of Loongson Technology Corporation
-#  Limited or any of its subsidiaries or corporate affiliates, or (iii) against any party relating to the Software.
-#
-#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-#  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR
-#  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION).
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
 #
 ##
-################################################################################
-#
-# Defines Section - statements that will be processed to create a Makefile.
-#
-################################################################################
+
 [Defines]
-  PLATFORM_NAME                  = LsEfiPkg
-  PLATFORM_GUID                  = C7B25F37-B1F4-4c46-99CB-3EA7DCF5FCDA
-  PLATFORM_VERSION               = 0.1
+  PLATFORM_NAME                  = AppEfiPkg
+  PLATFORM_GUID                  = A3F2C5D1-9E47-4C8B-9D9E-6E4B6F8D2A91
+  PLATFORM_VERSION               = 0.98
   DSC_SPECIFICATION              = 0x00010005
-  OUTPUT_DIRECTORY               = Build/LsEfiPkg
-  SUPPORTED_ARCHITECTURES        = IA32|X64|ARM|AARCH64|LOONGARCH64
-  BUILD_TARGETS                  = RELEASE|DEBUG|NOOPT
+  OUTPUT_DIRECTORY               = Build/AppEfiPkg
+  SUPPORTED_ARCHITECTURES        = X64|AARCH64|RISCV64|LOONGARCH64
+  BUILD_TARGETS                  = DEBUG|RELEASE|NOOPT
   SKUID_IDENTIFIER               = DEFAULT
 
-################################################################################
-#
-# SKU Identification section - list of all SKU IDs supported by this
-#                              Platform.
-#
-################################################################################
-[SkuIds]
-  0|DEFAULT              # The entry: 0|DEFAULT is reserved and always required.
+!include MdePkg/MdeLibs.dsc.inc
 
-[LibraryClasses]
-  NetworkManagerLib                | NetworkInterfaceAndNICPkg/Library/NetWorkManagerLib/NetWorkManagerLib.inf
-  StdLibC|Wangxun/NetSwiftUndiPkg/LibC/LibC.inf
-  DebugLib|MdePkg/Library/UefiDebugLibStdErr/UefiDebugLibStdErr.inf
+[PcdsFixedAtBuild.common]
+  # DEBUG_ASSERT_ENABLED       0x01
+  # DEBUG_PRINT_ENABLED        0x02
+  # DEBUG_CODE_ENABLED         0x04
+  # CLEAR_MEMORY_ENABLED       0x08
+  # ASSERT_BREAKPOINT_ENABLED  0x10
+  # ASSERT_DEADLOOP_ENABLED    0x20
+!if $(TARGET) == RELEASE
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x23
+!else
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x2f
+!endif
+
+  #  DEBUG_INIT      0x00000001  // Initialization
+  #  DEBUG_WARN      0x00000002  // Warnings
+  #  DEBUG_LOAD      0x00000004  // Load events
+  #  DEBUG_FS        0x00000008  // EFI File system
+  #  DEBUG_POOL      0x00000010  // Alloc & Free (pool)
+  #  DEBUG_PAGE      0x00000020  // Alloc & Free (page)
+  #  DEBUG_INFO      0x00000040  // Informational debug messages
+  #  DEBUG_DISPATCH  0x00000080  // PEI/DXE/SMM Dispatchers
+  #  DEBUG_VARIABLE  0x00000100  // Variable
+  #  DEBUG_BM        0x00000400  // Boot Manager
+  #  DEBUG_BLKIO     0x00001000  // BlkIo Driver
+  #  DEBUG_NET       0x00004000  // SNP Driver
+  #  DEBUG_UNDI      0x00010000  // UNDI Driver
+  #  DEBUG_LOADFILE  0x00020000  // LoadFile
+  #  DEBUG_EVENT     0x00080000  // Event messages
+  #  DEBUG_GCD       0x00100000  // Global Coherency Database changes
+  #  DEBUG_CACHE     0x00200000  // Memory range cachability changes
+  #  DEBUG_VERBOSE   0x00400000  // Detailed debug messages that may
+  #                              // significantly impact boot performance
+  #  DEBUG_ERROR     0x80000000  // Error
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000004F
+
+[LibraryClasses.common]
   BaseLib|MdePkg/Library/BaseLib/BaseLib.inf
   BaseMemoryLib|MdePkg/Library/BaseMemoryLib/BaseMemoryLib.inf
-  PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
-  TimerLib|MdePkg/Library/BaseTimerLibNullTemplate/BaseTimerLibNullTemplate.inf
-  UefiBootServicesTableLib|MdePkg/Library/UefiBootServicesTableLib/UefiBootServicesTableLib.inf
-  UefiRuntimeServicesTableLib|MdePkg/Library/UefiRuntimeServicesTableLib/UefiRuntimeServicesTableLib.inf
-  UefiDriverEntryPoint|MdePkg/Library/UefiDriverEntryPoint/UefiDriverEntryPoint.inf
-  UefiLib|MdePkg/Library/UefiLib/UefiLib.inf
+  # NULL|MdePkg/Library/BaseStackCheckLib/BaseStackCheckLib.inf
+  #
+  # Even on RELEASE. You want to see the logging.
+  #
+  DebugLib|MdePkg/Library/UefiDebugLibConOut/UefiDebugLibConOut.inf
+  DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
   PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
+  PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
+  UefiBootServicesTableLib|MdePkg/Library/UefiBootServicesTableLib/UefiBootServicesTableLib.inf
+  UefiApplicationEntryPoint|MdePkg/Library/UefiApplicationEntryPoint/UefiApplicationEntryPoint.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
   DevicePathLib|MdePkg/Library/UefiDevicePathLib/UefiDevicePathLib.inf
-  UefiRuntimeLib|MdePkg/Library/UefiRuntimeLib/UefiRuntimeLib.inf
-  HiiLib|MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
+  UefiRuntimeServicesTableLib|MdePkg/Library/UefiRuntimeServicesTableLib/UefiRuntimeServicesTableLib.inf
+  UefiLib|MdePkg/Library/UefiLib/UefiLib.inf
+  # MauUtilsLib|MultiArchUefiPkg/Library/MauUtilsLib/MauUtilsLib.inf
+  DxeServicesTableLib|MdePkg/Library/DxeServicesTableLib/DxeServicesTableLib.inf
+  HobLib|MdePkg/Library/DxeHobLib/DxeHobLib.inf
+  DxeServicesLib|MdePkg/Library/DxeServicesLib/DxeServicesLib.inf
+  PeCoffGetEntryPointLib|MdePkg/Library/BasePeCoffGetEntryPointLib/BasePeCoffGetEntryPointLib.inf
+  Tpm2CommandLib|SecurityPkg/Library/Tpm2CommandLib/Tpm2CommandLib.inf
+  Tpm2DeviceLib|SecurityPkg/Library/Tpm2DeviceLibTcg2/Tpm2DeviceLibTcg2.inf
+  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/BaseCryptLib.inf
+  IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
+  OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
+  RngLib|MdePkg/Library/BaseRngLibTimerLib/BaseRngLibTimerLib.inf
+
+# [LibraryClasses.common.PEIM]
+  # PeimEntryPoint|MdePkg/Library/PeimEntryPoint/PeimEntryPoint.inf
+  # PeiServicesTablePointerLib|MdePkg/Library/PeiServicesTablePointerLib/PeiServicesTablePointerLib.inf
+  # PeiServicesLib|MdePkg/Library/PeiServicesLib/PeiServicesLib.inf
+  # MemoryAllocationLib|MdePkg/Library/PeiMemoryAllocationLib/PeiMemoryAllocationLib.inf
+  # HobLib|MdePkg/Library/PeiHobLib/PeiHobLib.inf
+  # ReportStatusCodeLib|MdeModulePkg/Library/PeiReportStatusCodeLib/PeiReportStatusCodeLib.inf
+
+# [LibraryClasses.common.DXE_SMM_DRIVER]
+  # HobLib|MdePkg/Library/DxeHobLib/DxeHobLib.inf
+  # MemoryAllocationLib|MdePkg/Library/SmmMemoryAllocationLib/SmmMemoryAllocationLib.inf
+  # SmmServicesTableLib|MdePkg/Library/SmmServicesTableLib/SmmServicesTableLib.inf
+  # SmmMemLib|MdePkg/Library/SmmMemLib/SmmMemLib.inf
+  
+[LibraryClasses.common.UEFI_APPLICATION]
+  # UefiApplicationEntryPoint|MdePkg/Library/UefiApplicationEntryPoint/UefiApplicationEntryPoint.inf
+  ShellLib|ShellPkg/Library/UefiShellLib/UefiShellLib.inf
+  FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
+  # ShellCEntryLib|ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.inf
   UefiHiiServicesLib|MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.inf
-  DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
+  HiiLib|MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
+  # DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
+  SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
+  # PerformanceLib|MdeModulePkg/Library/DxePerformanceLib/DxePerformanceLib.inf
 
-################################################################################
-#
-# Pcd Section - list of all EDK II PCD Entries defined by this Platform
-#
-################################################################################
-[PcdsFeatureFlag]
-  gEfiMdePkgTokenSpaceGuid.PcdComponentNameDisable|FALSE
-  gEfiMdePkgTokenSpaceGuid.PcdDriverDiagnosticsDisable|FALSE
-  gEfiMdePkgTokenSpaceGuid.PcdComponentName2Disable|FALSE
-  gEfiMdePkgTokenSpaceGuid.PcdDriverDiagnostics2Disable|FALSE
 
-[PcdsFixedAtBuild]
-  gEfiMdePkgTokenSpaceGuid.PcdMaximumUnicodeStringLength|0x0
-  gEfiMdePkgTokenSpaceGuid.PcdMaximumAsciiStringLength|0x0
-  gEfiMdePkgTokenSpaceGuid.PcdMaximumLinkedListLength|0x0
-  gEfiMdePkgTokenSpaceGuid.PcdSpinLockTimeout|0x0
-  gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x27
-  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x80000042
-  gEfiMdePkgTokenSpaceGuid.PcdDebugClearMemoryValue|0x0
-
-###################################################################################################
-#
-# Components Section - list of the modules and components that will be processed by compilation
-#                      tools and the EDK II tools to generate PE32/PE32+/Coff image files.
-#
-# Note: The EDK II DSC file is not used to specify how compiled binary images get placed
-#       into firmware volume images. This section is just a list of modules to compile from
-#       source into UEFI-compliant binaries.
-#       It is the FDF file that contains information on combining binary files into firmware
-#       volume images, whose concept is beyond UEFI and is described in PI specification.
-#       Binary modules do not need to be listed in this section, as they should be
-#       specified in the FDF file. For example: Shell binary (Shell_Full.efi), FAT binary (Fat.efi),
-#       Logo (Logo.bmp), and etc.
-#       There may also be modules listed in this section that are not required in the FDF file,
-#       When a module listed here is excluded from FDF file, then UEFI-compliant binary will be
-#       generated for it, but the binary will not be put into any firmware volume.
-#
-###################################################################################################
+[BuildOptions]
 
 [Components]
-  LsEfiPkg/LsEfiApp/LsEfiApp.inf
+
+  AppEfiPkg/AppSrc/HelloApp/HelloApp.inf
+  AppEfiPkg/AppSrc/ResetCountApp/ResetCountApp.inf
+  AppEfiPkg/AppSrc/HobList/HobList.inf
+  AppEfiPkg/AppSrc/PcdDump/PcdDump.inf
+
+  AppEfiPkg/AppSrc/Gcd/Gcd.inf
+  AppEfiPkg/AppSrc/MemoryTypeInfo/MemoryTypeInfo.inf
+  AppEfiPkg/AppSrc/MemoryAttributesDump/MemoryAttributesDump.inf
+  # AppEfiPkg/AppSrc/HstiWsmtDump/HstiWsmtDump.inf
+  AppEfiPkg/AppSrc/EsrtFmpDump/EsrtFmpDump.inf
+
+  # AppEfiPkg/AppSrc/SmmProfileDump/SmmProfileDump.inf
+  # AppEfiPkg/AppSrc/VtdDump/VtdDump.inf
+
+  AppEfiPkg/AppSrc/EdkiiCoreDatabaseDump/DxeCoreDump/DxeCoreDumpApp.inf
+  # AppEfiPkg/AppSrc/EdkiiCoreDatabaseDump/SmmCoreDump/SmmCoreDump.inf
+  # AppEfiPkg/AppSrc/EdkiiCoreDatabaseDump/SmmCoreDump/SmmCoreDumpApp.inf
+  # AppEfiPkg/AppSrc/EdkiiCoreDatabaseDump/PeiCoreDump/PeiCoreDump.inf
+  # AppEfiPkg/AppSrc/EdkiiCoreDatabaseDump/PeiCoreDump/PeiCoreDumpApp.inf
+
+  # AppEfiPkg/AppSrc/SmiPerf/SmiPerf.inf
+  # AppEfiPkg/AppSrc/GetVariablePerf/GetVariablePerf.inf
+
+  # AppEfiPkg/AppSrc/Tcg2DumpLog/Tcg2DumpLog.inf
+
+  # AppEfiPkg/AppSrc/GetPciOprom/GetPciOprom.inf
+
+  # AppEfiPkg/AppSrc/UsbInfo/UsbInfo.inf
+  # AppEfiPkg/AppSrc/AtaInfo/AtaInfo.inf
+  # AppEfiPkg/AppSrc/ScsiInfo/ScsiInfo.inf
+
+  # AppEfiPkg/AppSrc/PatchMicrocode/PatchMicrocode.inf
+
+  # AppEfiPkg/AppSrc/StackUsage/StackUsage.inf
+
+  # AppEfiPkg/AppSrc/DbxEnroll/DbxEnroll.inf
+
+  # AppEfiPkg/AppSrc/InitSerial/InitSerial.inf {
+  # <LibraryClasses>
+  #   PlatformHookLib|MdeModulePkg/Library/BasePlatformHookLibNull/BasePlatformHookLibNull.inf
+  #   SerialPortLib|PcAtChipsetPkg/Library/SerialIoLib/SerialIoLib.inf
+  #   SerialPortLib|MdeModulePkg/Library/BaseSerialPortLib16550/BaseSerialPortLib16550.inf
+  # }
+  # AppEfiPkg/AppSrc/DummyRt/DummyRt.inf
+
+  # AppEfiPkg/AppSrc/BootOption/BootOption.inf
+
+  # AppEfiPkg/AppSrc/DumpVirtioPciDev/DumpVirtioPciDev.inf
+
+
+
+  # MultiArchUefiPkg/Application/EmulatorTest/EmulatorTest.inf
+  # MultiArchUefiPkg/Application/LoadOpRom/LoadOpRom.inf
+  # MultiArchUefiPkg/Application/SetCon/SetCon.inf {
+  #   <LibraryClasses>
+  #     HandleParsingLib|ShellPkg/Library/UefiHandleParsingLib/UefiHandleParsingLib.inf
+  #     FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
+  #     HiiLib|MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
+  #     SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
+  #     PeCoffGetEntryPointLib|MdePkg/Library/BasePeCoffGetEntryPointLib/BasePeCoffGetEntryPointLib.inf
+  #     UefiHiiServicesLib|MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.inf
+  # }
+
